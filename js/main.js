@@ -72,8 +72,47 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // ==========================================================================
   // 2. Mobile Navigation & Hamburger Menu Toggle
+  // 이벤트: 햄버거 메뉴 버튼 클릭, 메뉴 링크 클릭, 외부 영역 클릭
+  // 상태 변경: navOpen boolean
+  // DOM 렌더링: active 클래스 토글, aria-expanded 갱신, 햄버거 아이콘 변경
   // ==========================================================================
+  const hamburgerBtn = document.getElementById('hamburger-btn');
+  const navMenu = document.getElementById('nav-menu');
+  const navLinks = document.querySelectorAll('.nav-link');
 
+  function toggleMobileMenu() {
+    const isActive = navMenu.classList.toggle('active');
+    hamburgerBtn.clssList.toggle('active', isActive);
+    hamburgerBtn.setAttribute('aria-expanded', String(isActive));
+  }
+
+  function closeMobileMenu() {
+    navMenu.classList.remove('active');
+    hamburgerBtn.classList.remove('active');
+    hamburgerBtn.setAttribute('aria-expanded', 'false');
+  }
+
+  if (hamburgerBtn) {
+    hamburgerBtn.addEventListener('click', toggleMobileMenu);
+  }
+
+  navLinks.forEach(link => {
+    link.addEventListener('click', () => {
+      closeMobileMenu()
+    });
+  });
+
+  // 외부 영역 클릭 시 닫기
+  document.addEventListener('click', (e) => {
+    if (
+      navMenu &&
+      navMenu.classList.contains('active') &&
+      !navMenu.contains(e.target) &&
+      !hamburgerBtn.contains(e.target)
+    ) {
+      closeMobileMenu();
+    }
+  });
 
   // ==========================================================================
   // 3. Scroll Interactions (Navbar, Top Button, Active Section)
