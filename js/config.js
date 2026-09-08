@@ -3,7 +3,7 @@ const CONFIG = {
   GITHUB_USERNAME: 'P516n',
   PROFILE: {
     name: '박동규',
-    title: 'Security Specialist & Aspiring Web Developer',
+    title: 'Aspiring Web Developer',
     typingTexts: [
       'Security Specialist.',
       'Aspiring Web Developer.',
