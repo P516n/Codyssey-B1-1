@@ -9,7 +9,7 @@
   <title>Codyssey-B1-1</title>
 
   <!-- Favicon -->
-  <link rel="icon" type="image/x-icon" href="favicon.ico" />
+  <link rel="icon" type="image/x-icon" href="images/favicon.ico" />
 
   <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -23,45 +23,70 @@
 
   <!-- Main Stylesheet -->
   <link rel="stylesheet" href="css/style.css" />
+
+  <!-- Scripts with defer -->
+  <script src="js/main.js" defer></script>
 </head>
 <body>
   <!-- ==================== HEADER & NAVIGATION ==================== -->
-  <header>
-    <nav>
-      <ul>
-        <li><a href="#">Home</a></li>
-        <li><a href="#">About</a></li>
-        <li><a href="#">Skills</a></li>
-        <li><a href="#">Projects</a></li>
-        <li><a href="#">Contact</a></li>
+  <header id="header" class="header">
+    <nav class="nav-container" aria-label="메인 네비게이션">
+      <!-- Logo -->
+      <a href="#hero" class="nav-logo" aria-label="홈으로 이동">
+        <span class="logo-bracket">&lt;</span>
+        <span class="logo-text">P516n.dev</span>
+        <span class="logo-bracket">/&gt;</span>
+      </a>
+
+      <!-- Navigation Links -->
+      <ul id="nav-menu" class="nav-menu">
+        <li class="nav-item"><a href="#hero" class="nav-link">Home</a></li>
+        <li class="nav-item"><a href="#about" class="nav-link">About</a></li>
+        <li class="nav-item"><a href="#skills" class="nav-link">Skills</a></li>
+        <li class="nav-item"><a href="#projects" class="nav-link">Projects</a></li>
+        <li class="nav-item"><a href="#contact" class="nav-link">Contact</a></li>
       </ul>
+
+      <!-- Navigation Action Controls (Theme Toggle & Mobile Hamburger) -->
+      <div class="nav-actions">
+        <!-- Theme Toggle Button -->
+        <button id="theme-toggle" class="theme-toggle" aria-label="다크 모드 전환" title="다크 모드 전환">
+          <i class="fas-solid fa-moon" id="theme-icon"></i>
+        </button>
+        <!-- Mobile Hamburger Menu Button -->
+        <button id="hamburger-btn" class="hamburger-btn" aria-label="메뉴 열기/닫기" aria-expanded="false" aria-controls="nav-menu">
+          <span class="bar"></span> <!-- 추후 css로 햄버거 아이콘 구현할 예정 -->
+          <span class="bar"></span>
+          <span class="bar"></span>
+        </button>
+      </div>
     </nav>
   </header>
 
   <!-- ==================== MAIN CONTENT ==================== -->
   <main>
     <!-- 1. HERO SECTION -->
-    <section>
+    <section id="hero">
 
     </section>
 
     <!-- 2. ABOUT SECTION -->
-    <section>
+    <section id="about">
 
     </section>
 
     <!-- 3. SKILLS SECTION -->
-    <section>
+    <section id="skills">
 
     </section>
 
     <!-- 4. PROJECTS SECTION (Github API 연동) -->
-    <section>
+    <section id="projects">
 
     </section>
 
     <!-- 5. CONTACT SECTION -->
-    <section>
+    <section id="contact">
 
     </section>
   </main>
