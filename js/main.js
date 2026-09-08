@@ -116,8 +116,59 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // ==========================================================================
   // 3. Scroll Interactions (Navbar, Top Button, Active Section)
+  // 이벤트: window scroll
+  // DOM 렌더링: header scrolled 클래스, top-button visible 클래스, nav-link active 갱신
   // ==========================================================================
+  const header = document.getElementById('header');
+  const scrollTopBtn = document.getElementById('scroll-top-btn');
+  const sections = document.querySelectorAll('section[id]');
 
+  function handleScroll() {
+    const currentScrollY = window.scrollY;
+
+    // 네비게이션 헤더 배경 전환 (기본 60px 이상)
+    if (header) {
+      if (currentScrollY >= (CONFIG.SCROLL?.NAVBAR_THRESHOLD || 60)) {
+        header.classList.add('scrolled');
+      } else {
+        header.classList.remove('scrolled');
+      }
+    }
+
+    // 맨 위로가기 버튼 노출 (기본 300px 이상)
+    if (scrollTopBtn) {
+      if (currentScrollY >= (CONFIG.SCROLL?.TOP_BTN_THRESHOLD || 300)) {
+        scrollTopBtn.classList.add('visible');
+      } else {
+        scrollTopBtn.classList.remove('visible');
+      }
+    }
+
+    // 현재 스크롤 위치에 따른 네비게이션 링크 활성화
+    sections.forEach(section => {
+      const sectionHeight = section.offsetHeight;
+      const sectionTop = section.offsetTop - 120;
+      const sectionId = section.getAttribute('id');
+
+      if (currentScrollY >= sectionTop && currentScrollY < sectionTop + sectionHeight) {
+        navLinks.forEach((link) => {
+          if (link.getAttribute('href') === `#${sectionId}`) {
+            link.classList.add('active');
+          } else {
+            link.classList.remove('active');
+          }
+        });
+      }
+    });
+  }
+
+  window.addEventListener('scroll', handleScroll, { passive: true });
+
+  if (scrollTopBtn) {
+    scrollTopBtn.addEventListener('click', () => {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+  }
 
   // ==========================================================================
   // 4. Scroll Animations (Intersection Observer)
