@@ -69,8 +69,6 @@ document.addEventListener('DOMContentLoaded', () => {
       themeToggleBtn.addEventListener('click', toggleTheme);
     }
   }
-  // ==========================================================================
-
 
   // ==========================================================================
   // 2. Mobile Navigation & Hamburger Menu Toggle
