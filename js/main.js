@@ -172,8 +172,32 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // ==========================================================================
   // 4. Scroll Animations (Intersection Observer)
+  // 대상: fade-in-element 요소
+  // DOM 렌더링: viewport 진입 시 .visible 클래스 추가
   // ==========================================================================
+  function initScrollAnimations() {
+    const fadeElements = document.querySelectorAll('.fade-in-element');
+    if (!fadeElements.length) return;
 
+    const observerOptions = {
+      root: null,
+      rootMargin: '0px',
+      threshold: CONFIG.SCROLL?.INTERSECTION_THRESHOLD || 0.2
+    };
+
+    const observer = new IntersectionObserver((entries, obs) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          obs.unobserve(entry.target); // 한번 노출 된 후 옵저버 해제
+        }
+      });
+    }, observerOptions);
+
+    fadeElements.forEach(element => {
+      observer.observe(element);
+    });
+  }
 
   // ==========================================================================
   // 5. GitHub API Fetching & 4-State UI (Loading / Success / Error / Empty)
@@ -199,5 +223,6 @@ document.addEventListener('DOMContentLoaded', () => {
   // Initialization
   // ==========================================================================
   initTheme();
+  initScrollAnimations()
 
 });
