@@ -82,7 +82,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function toggleMobileMenu() {
     const isActive = navMenu.classList.toggle('active');
-    hamburgerBtn.clssList.toggle('active', isActive);
+    hamburgerBtn.classList.toggle('active', isActive);
     hamburgerBtn.setAttribute('aria-expanded', String(isActive));
   }
 
