@@ -212,7 +212,46 @@ document.addEventListener('DOMContentLoaded', () => {
   // ==========================================================================
   // 7. Typing Effect (Hero Section)
   // ==========================================================================
+  const typingElement = document.getElementById('typing-text');
+  const typingWords = CONFIG.PROFILE?.typingTexts || [
+    'Front-End Developer.',
+    'Creative Problem Solver.',
+    'Continuous Learner.'
+  ];
 
+  let wordIndex = 0;
+  let charIndex = 0;
+  let isDeleting = false;
+  let typingSpeed = 100;
+
+  function typeEffect() {
+    if (!typingElement) return;
+
+    const currentWord = typingWords[wordIndex];
+
+      if (isDeleting) {
+        typingElement.textContent = currentWord.substring(0, charIndex - 1);
+        charIndex--;
+        typingSpeed = 50;
+      } else {
+        typingElement.textContent = currentWord.substring(0, charIndex + 1);
+        charIndex++;
+        typingSpeed = 110;
+      }
+
+    if (!isDeleting && charIndex === currentWord.length) {
+      // 한 단어 완성 시 일시 대기
+      typingSpeed = 1800;
+      isDeleting = true;
+    } else if (isDeleting && charIndex === 0) {
+      // 단어 삭제 완료 시 다음 단어로 이동
+      isDeleting = false;
+      wordIndex = (wordIndex + 1) % typingWords.length;
+      typingSpeed = 500;
+    }
+
+    setTimeout(typeEffect, typingSpeed);
+  }
 
   // ==========================================================================
   // Utility Functions & Config Reflection
@@ -224,5 +263,5 @@ document.addEventListener('DOMContentLoaded', () => {
   // ==========================================================================
   initTheme();
   initScrollAnimations()
-
+  typeEffect();
 });
