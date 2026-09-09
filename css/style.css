@@ -578,3 +578,128 @@ button {
 /* --------------------------------------------------------------------------
   12. Responsive Media Queries (Mobile First)
   -------------------------------------------------------------------------- */
+/* Tablet Breakpoint (768px 이상) */
+@media (min-width: 768px) {
+  :root {
+    --section-spacing-y: 6rem;
+  }
+
+  .section-title {
+    font-size: 2.35rem;
+  }
+
+  .hero-container {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .hero-content {
+    flex: 1;
+  }
+
+  .hero-visual {
+    flex: 1;
+    justify-content: flex-end;
+  }
+
+  .hero-image-wrapper {
+    width: 320px;
+    height: 320px;
+  }
+
+  .hero-title {
+    font-size: 3rem;
+  }
+
+  .about-grid {
+    flex-direction: row;
+    align-items: center;
+    gap: 3.5rem;
+  }
+
+  .about-image-col {
+    flex: 0 0 320px;
+  }
+
+  .about-text-col {
+    flex: 1;
+  }
+
+  .about-info-list {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .skills-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .contact-card {
+    padding: 2.5rem 2rem;
+  }
+
+  .footer-container {
+    flex-direction: row;
+    justify-content: space-between;
+    text-align: left;
+  }
+}
+
+/* Desktop Breakpoint (1024px 이상) */
+@media (min-width: 1024px) {
+  .hamburger-btn {
+    display: none;
+    /* 햄버거 버튼 숨김 */
+  }
+
+  .nav-menu {
+    position: static;
+    width: auto;
+    background-color: transparent;
+    border-bottom: none;
+    padding: 0;
+    flex-direction: row;
+    align-items: center;
+    gap: 2rem;
+    transform: none;
+    opacity: 1;
+    visibility: visible;
+    box-shadow: none;
+  }
+
+  .nav-link {
+    font-size: 0.95rem;
+    padding: 0.25rem 0;
+    position: relative;
+  }
+
+  .nav-link::after {
+    content: '';
+    position: absolute;
+    bottom: -4px;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background-color: var(--color-primary);
+    transition: width var(--transition-fast);
+    border-radius: var(--radius-full);
+  }
+
+  .nav-link:hover::after,
+  .nav-link.active::after {
+    width: 100%;
+  }
+
+  .hero-title {
+    font-size: 3.4rem;
+  }
+
+  .hero-image-wrapper {
+    width: 360px;
+    height: 360px;
+  }
+
+  .skills-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
