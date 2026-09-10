@@ -767,6 +767,9 @@ button {
   color: #ffffff;
 }
 
+/* [WIP] Projects Card Grid (Requirements: Grid, auto-fit, minmax) */
+/* [WIP] Project Card Item */
+
 /* UI States: Loading / Error / Empty */
 .state-container {
   display: flex;
