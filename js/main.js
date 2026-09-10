@@ -202,7 +202,116 @@ document.addEventListener('DOMContentLoaded', () => {
   // ==========================================================================
   // 5. GitHub API Fetching & 4-State UI (Loading / Success / Error / Empty)
   // ==========================================================================
+  const projectsContainer = document.getElementById('projects-container');
+  const projectsFilter = document.getElementById('projects-filter');
 
+  async function fetchGitHubRepos() {
+    const username = CONFIG.GITHUB_USERNAME || 'octocat';
+    // const apiUrl = `https://api.github.com/users/${username}/repos?sort=updated&per_page=12`;
+    const apiUrl = `https://api.github.com/users/octocat/repos?sort=updated&per_page=1`; // 디버깅 시 api rate 방지
+
+    state.apiStatus = 'loading';
+    renderProjectsUI();
+
+    try {
+      const response = await fetch(apiUrl);
+
+      // GitHub API 레이트 리밋 (403) 또는 유저 없음 (404) 처리
+      if (!response.ok) {
+        if (response.status === 403) {
+          throw new Error('GitHub API 요청 한도(시간당 60회)를 초과하였습니다. 잠시 후 다시 시도해주세요.');
+        } else if (response.status === 404) {
+          throw new Error(`GitHub 계정 '${username}'을 찾을 수 없습니다.`);
+        } else {
+          throw new Error(`저장소 데이터를 불러오는 중 오류가 발생했습니다. (HTTP ${response.status})`);
+        }
+      }
+
+      const data = await response.json();
+
+      // Fork된 저장소 제외 및 최신 업데이트 순 정렬 (선택적 정제)
+      const personalRepos = data.filter((repo) => !repo.fork);
+      const targetRepos = personalRepos.length > 0 ? personalRepos : data;
+
+      state.repos = targetRepos;
+      state.filteredRepos = targetRepos;
+
+      if (targetRepos.length === 0) {
+        state.apiStatus = 'empty';
+      } else {
+        state.apiStatus = 'success';
+      }
+    } catch (error) {
+      state.apiStatus = 'error';
+      state.errorMessage = error.message || '네트워크 연결 상태를 확인하고 다시 시도해주세요.';
+    }
+
+    renderProjectsFilterButtons();
+    renderProjectsUI();
+  }
+
+  function filterProjects(language) {
+
+  }
+
+  // 필터 버튼 렌더링 (array.filter 활용)
+  function renderProjectsFilterButtons() {
+
+  }
+
+  // 프로젝트 UI 상태별 렌더링 (로딩 / 성공 / 에러 / 빈 상태)
+  function renderProjectsUI() {
+    if (!projectsContainer) return;
+
+    // 1. 로딩 상태
+    if (state.apiStatus === 'loading') {
+    projectsContainer.innerHTML = `
+        <div class="state-container">
+          <div class="spinner" aria-hidden="true"></div>
+          <h3 class="state-title">GitHub 저장소 로딩 중...</h3>
+          <p class="state-desc">최신 프로젝트 데이터를 가져오고 있습니다. 잠시만 기다려주세요.</p>
+        </div>
+      `;
+      return;
+    }
+
+    // 2. 에러 상태 (메시지 + 재시도 버튼)
+    if (state.apiStatus === 'error') {
+      projectsContainer.innerHTML = `
+        <div class="state-container">
+          <div class="state-icon-error"><i class="fa-solid fa-triangle-exclamation"></i></div>
+          <h3 class="state-title">프로젝트를 불러올 수 없습니다</h3>
+          <p class="state-desc">${escapeHtml(state.errorMessage)}</p>
+          <button id="retry-fetch-btn" class="btn btn-primary">
+            <i class="fa-solid fa-rotate-right"></i> 다시 시도
+          </button>
+        </div>
+      `;
+
+      const retryBtn = document.getElementById('retry-fetch-btn');
+      if (retryBtn) {
+        retryBtn.addEventListener('click', fetchGitHubRepos);
+      }
+      return;
+    }
+
+    // 3. 빈 데이터 상태
+    if (state.apiStatus === 'empty' || (state.apiStatus === 'success' && state.filteredRepos.length === 0)) {
+      projectsContainer.innerHTML = `
+        <div class="state-container">
+          <div class="state-icon-empty"><i class="fa-regular fa-folder-open"></i></div>
+          <h3 class="state-title">표시할 프로젝트가 없습니다</h3>
+          <p class="state-desc">해당 조건에 부합하는 저장소가 없거나 공개 저장소가 비어있습니다.</p>
+        </div>
+      `;
+      return;
+    }
+
+    // 4. 성공 상태: ES6 map 및 템플릿 리터럴로 카드 그리드 생성
+    if (state.apiStatus === 'success') {
+      
+    }
+  }
 
   // ==========================================================================
   // 6. Contact Form Validation UX
@@ -374,4 +483,5 @@ document.addEventListener('DOMContentLoaded', () => {
   initTheme();
   initScrollAnimations()
   typeEffect();
+  fetchGitHubRepos()
 });
