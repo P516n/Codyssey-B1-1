@@ -221,12 +221,26 @@
 
               <!-- Email Input -->
               <div class="form-group">
-                
+                <label for="user-mail" class="form-label">
+                  이메일 주소 <span class="required" aria-hidden="true">*</span>
+                </label>
+                <div class="input-wrapper">
+                    <i class="fa-regular fa-envelope input-icon"></i>
+                    <input type="email" id="user-email" name="email" class="form-input" placeholder="example@domain.com"
+                    required autocomplete="email">
+                </div>
               </div>
 
               <!-- Message Textarea -->
               <div class="form-group">
-
+                <label for="user-message" class="form-label">
+                  문의 내용 <span class="required" aria-hidden="true">*</span>
+                </label>
+                <div class="input-wrapper textarea-wrapper">
+                    <i class="fa-regular fa-comment-dots input-icon textarea-icon"></i>
+                    <textarea id="user-message" name="message" class="form-input form-textarea" rows="5"
+                    placeholder="프로젝트 의뢰, 제안 또는 질문 내용을 입력해주세요..." required></textarea>
+                </div>
               </div>
 
               <!-- Submit Button -->
