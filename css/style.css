@@ -651,7 +651,15 @@ button {
 /* --------------------------------------------------------------------------
    8. Contact Section (Form & UX)
    -------------------------------------------------------------------------- */
+.contact-section {
+  background-color: var(--bg-surface);
+  border-top: 1px solid var(--border-color);
+}
 
+.contact-wrapper {
+  max-width: 620px;
+  margin: 0 auto;
+}
 
 /* --------------------------------------------------------------------------
    9. Footer
