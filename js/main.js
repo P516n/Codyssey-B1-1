@@ -206,8 +206,118 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // ==========================================================================
   // 6. Contact Form Validation UX
+  // 이벤트: input(실시간 검증 해제), submit(전체 유효성 검사)
+  // 상태 변경: 폼 유효성 여부
+  // DOM 렌더링: 인라인 에러 메시지 표시/숨김, 성공 알림 배너 노출, 폼 리셋
   // ==========================================================================
+  const contactForm = document.getElementById('contact-form');
+  const nameInput = document.getElementById('user-name');
+  const emailInput = document.getElementById('user-email');
+  const messageInput = document.getElementById('user-message');
+  const nameError = document.getElementById('name-error');
+  const emailError = document.getElementById('email-error');
+  const messageError = document.getElementById('message-error');
+  const successMessage = document.getElementById('form-success-message');
 
+  function validateEmail(email) {
+    // 이메일 정규식 형식 검증
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(String(email).toLowerCase());
+  }
+
+  function clearError(input, errorEl) {
+    input.classList.remove('input-error');
+    errorEl.textContent = '';
+  }
+
+  function setError(input, errorEl, message) {
+    input.classList.add('input-error');
+    errorEl.textContent = message;
+  }
+
+  // 실시간 입력 이벤트: 사용자가 수정하면 즉시 에러 제거
+  if (nameInput) {
+    nameInput.addEventListener('input', () => {
+      if (nameInput.value.trim().length > 0) {
+        clearError(nameInput, nameError);
+      }
+    });
+  }
+
+  if (emailInput) {
+    emailInput.addEventListener('input', () => {
+      if (validateEmail(emailInput.value.trim())) {
+        clearError(emailInput, emailError);
+      }
+    });
+  }
+
+  if (messageInput) {
+    messageInput.addEventListener('input', () => {
+      if (messageInput.value.trim().length >= 5) {
+        clearError(messageInput, messageError);
+      }
+    });
+  }
+
+  if (contactForm) {
+    contactForm.addEventListener('submit', (e) => {
+      e.preventDefault(); // 기본 폼 제출 방지
+
+      let isValid = true;
+      const nameVal = nameInput.value.trim();
+      const emailVal = emailInput.value.trim();
+      const messageVal = messageInput.value.trim();
+
+      // 이름 검증
+      if (!nameVal) {
+        setError(nameInput, nameError, '이름을 입력해주세요.');
+        isValid = false;
+      } else {
+        clearError(nameInput, nameError);
+      }
+
+      // 이메일 검증
+      if (!emailVal) {
+        setError(emailInput, emailError, '이메일 주소를 입력해주세요.');
+        isValid = false;
+      } else if (!validateEmail(emailVal)) {
+        setError(emailInput, emailError, '올바른 이메일 형식(example@domain.com)으로 입력해주세요.');
+        isValid = false;
+      } else {
+        clearError(emailInput, emailError);
+      }
+
+      // 메시지 내용 검증
+      if (!messageVal) {
+        setError(messageInput, messageError, '문의 내용을 입력해주세요.');
+        isValid = false;
+      } else if (messageVal.length < 5) {
+        setError(messageInput, messageError, '내용을 5자 이상 입력해주세요.');
+        isValid = false;
+      } else {
+        clearError(messageInput, messageError);
+      }
+
+      // 유효성 검사 실패 시 첫 번째 오류 필드로 포커스 이동
+      if (!isValid) {
+        const firstErrorInput = contactForm.querySelector('.input-error');
+        if (firstErrorInput) firstErrorInput.focus();
+        return;
+      }
+
+      // 성공 시: 성공 메시지 피드백 표시 및 폼 초기화
+      if (successMessage) {
+        successMessage.classList.remove('hidden');
+        contactForm.reset();
+
+        // 6초 후 성공 안내 자동 숨김
+        setTimeout(() => {
+          successMessage.classList.add('hidden');
+        }, 6000);
+      }
+    });
+  }
 
   // ==========================================================================
   // 7. Typing Effect (Hero Section)
