@@ -236,10 +236,24 @@
     <!-- 4. PROJECTS SECTION (Github API 연동) -->
     <section id="projects" class="projects-section section-padding">
       <div class="container">
-        <h2 class="section-title">Projects</h2>
-        <div id="projects-container" class="projects-grid">
-          <!-- JavaScript를 통해 GitHub API에서 프로젝트 데이터를 가져와서 동적으로 생성 -->
+        <div class="section-header text-center fade-in-element">
+          <h2 class="section-title">Projects</h2>
+          <div class="section-line"></div>
+          <p class="section-subtitle">GitHub API를 통해 실시간으로 저장소 목록을 가져와 렌더링합니다</p>
         </div>
+
+        <!-- Filter Buttons -->
+        <div class="projects-filter fade-in-element" id="projects-filter" role="tablist" aria-label="프로젝트 언어 필터">
+          <button class="filter-btn active" data-filter="all" role="tab" aria-selected="true">전체</button>
+          <!-- Dynamic filter buttons will be rendered here -->
+        </div>
+
+        <!-- GitHub Projects Container: Loading / Success / Error / Empty UI States -->
+        <!-- JavaScript를 통해 GitHub API에서 프로젝트 데이터를 가져와서 동적으로 생성 -->
+        <div id="projects-container" class="projects-container" aria-live="polite">
+          <!-- JS 에서 동적으로 인젝트 되는 부분 (status, repo cards) -->
+        </div>
+
       </div>
     </section>
 
@@ -342,7 +356,7 @@
   <button id="scroll-top-btn" class="scroll-top-btn" aria-label="페이지 상단으로 이동" title="맨 위로 가기">
     <i class="fa-solid fa-arrow-up"></i>
   </button>
-  
+
 </body>
 
 </html>
