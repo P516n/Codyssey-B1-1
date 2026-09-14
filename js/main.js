@@ -17,6 +17,11 @@ document.addEventListener('DOMContentLoaded', () => {
   // ==========================================================================
   const state = {
     theme: 'light', // 'light' | 'dark'
+    repos: [],
+    filteredRepos: [],
+    selectedFilter: 'all',
+    apiStatus: 'idle', // 'idle' | 'loading' | 'success' | 'error' | 'empty'
+    errorMessage: ''
   }
 
   // ==========================================================================
@@ -201,6 +206,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // ==========================================================================
   // 5. GitHub API Fetching & 4-State UI (Loading / Success / Error / Empty)
+  // 이벤트: 페이지 로드 시 최초 호출 및 '재시도' 버튼 클릭
+  // 상태 변경: state.apiStatus, state.repos, state.filteredRepos
+  // DOM 렌더링: 로딩 / 성공(카드 목록) / 에러(+재시도) / 빈 데이터 UI
   // ==========================================================================
   const projectsContainer = document.getElementById('projects-container');
   const projectsFilter = document.getElementById('projects-filter');
