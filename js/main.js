@@ -283,7 +283,7 @@ document.addEventListener('DOMContentLoaded', () => {
       .map((lang) => {
         const isActive = state.selectedFilter === lang ? 'active' : '';
         const label = lang === 'all' ? '전체' : lang;
-        return `<button> class="filter-btn ${isActive}" data-filter="${lang}" role="tab" aria-selected="${state.selectedFilter === lang}">${label}</button>`;
+        return `<button class="filter-btn ${isActive}" data-filter="${lang}" role="tab" aria-selected="${state.selectedFilter === lang}">${label}</button>`;
       })
       .join('');
 
@@ -349,7 +349,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const cardsHtml = state.filteredRepos
         .map((repo) => {
           const { name, description, html_url, homepage, stargazers_count, language, updated_at } = repo;
-          const displayDesc = description ? description : '설명이 등록되지 않은 저장소 입니다.';
+          const displayDesc = description ? description : '설명이 등록되지 않은 저장소입니다.';
           const displayLang = language ? language : 'Markdown / Etc';
           const updateDate = new Date(updated_at).toLocaleDateString('ko-KR', {
             year: 'numeric',
@@ -557,12 +557,60 @@ document.addEventListener('DOMContentLoaded', () => {
   // ==========================================================================
   // Utility Functions & Config Reflection
   // ==========================================================================
+  function escapeHtml(str) {
+    if (!str) return '';
+    return String(str)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#039;');
+  }
 
+  function applyProfileConfig() {
+    // config.js의 개인화 설정 반영
+    const nameEl = document.getElementById('owner-name');
+    const aboutNameEl = document.getElementById('about-name');
+    const footerOwnerEl = document.getElementById('footer-owner');
+    const currentYearEl = document.getElementById('current-year');
+    const aboutEmailEl = document.getElementById('about-email');
+    const footerEmailLink = document.getElementById('footer-email');
+    const footerGithubLink = document.getElementById('footer-github');
+    const footerLinkedinLink = document.getElementById('footer-linkedin');
+    const metaAuthor = document.querySelector('meta[name="author"]');
+    const roleTitle = CONFIG.PROFILE.title || 'Frontend Developer';
+
+    if (CONFIG.PROFILE?.name) {
+      if (nameEl) nameEl.textContent = CONFIG.PROFILE.name;
+      if (aboutNameEl) aboutNameEl.textContent = CONFIG.PROFILE.name;
+      if (footerOwnerEl) footerOwnerEl.textContent = CONFIG.PROFILE.name;
+      if (metaAuthor) metaAuthor.setAttribute('content', CONFIG.PROFILE.name);
+      document.title = `${CONFIG.PROFILE.name} | ${roleTitle} Portfolio`;
+    }
+
+    if (currentYearEl) {
+      currentYearEl.textContent = new Date().getFullYear();
+    }
+
+    if (CONFIG.PROFILE?.email) {
+      if (aboutEmailEl) aboutEmailEl.textContent = CONFIG.PROFILE.email;
+      if (footerEmailLink) footerEmailLink.setAttribute('href', `mailto:${CONFIG.PROFILE.email}`);
+    }
+
+    if (CONFIG.PROFILE?.githubUrl && footerGithubLink) {
+      footerGithubLink.setAttribute('href', CONFIG.PROFILE.githubUrl);
+    }
+
+    if (CONFIG.PROFILE?.linkedinUrl && footerLinkedinLink) {
+      footerLinkedinLink.setAttribute('href', CONFIG.PROFILE.linkedinUrl);
+    }
+  }
 
   // ==========================================================================
   // Initialization
   // ==========================================================================
   initTheme();
+  applyProfileConfig();
   initScrollAnimations();
   typeEffect();
   fetchGitHubRepos();
