@@ -218,8 +218,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
   async function fetchGitHubRepos() {
     const username = CONFIG.GITHUB_USERNAME || 'octocat';
-    // const apiUrl = `https://api.github.com/users/${username}/repos?sort=updated&per_page=12`;
-    const apiUrl = `https://api.github.com/users/octocat/repos?sort=updated&per_page=1`; // 디버깅 시 api rate 방지
+    const apiUrl = `https://api.github.com/users/${username}/repos?sort=updated&per_page=12`;
+    // const apiUrl = `https://api.github.com/users/octocat/repos?sort=updated&per_page=1`; // 디버깅 시 api rate 방지
 
     state.apiStatus = 'loading';
     renderProjectsUI();
