@@ -22,7 +22,7 @@ document.addEventListener('DOMContentLoaded', () => {
     selectedFilter: 'all',
     apiStatus: 'idle', // 'idle' | 'loading' | 'success' | 'error' | 'empty'
     errorMessage: ''
-  }
+  };
 
   // ==========================================================================
   // 1. Theme Management (Dark Mode / Light Mode)
@@ -32,7 +32,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // ==========================================================================
   const themeToggleBtn = document.getElementById('theme-toggle');
   const themeIcon = document.getElementById('theme-icon');
-  
+
   function initTheme() {
     const savedTheme = localStorage.getItem('portfolio_theme');
     const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
@@ -48,31 +48,31 @@ document.addEventListener('DOMContentLoaded', () => {
         renderTheme();
       }
     });
+  }
 
-    function toggleTheme() {
-      state.theme = (state.theme === 'light') ? 'dark' : 'light';
-      localStorage.setItem('portfolio_theme', state.theme);
-      renderTheme();
-    }
+  function toggleTheme() {
+    state.theme = (state.theme === 'light') ? 'dark' : 'light';
+    localStorage.setItem('portfolio_theme', state.theme);
+    renderTheme();
+  }
 
-    function renderTheme() {
-      document.documentElement.setAttribute('data-theme', state.theme);
-      if(themeIcon) {
-        if (state.theme === 'dark') {
-          themeIcon.className = 'fa-solid fa-sun'; // FontAwesome 아이콘 클래스 변경
-          themeToggleBtn.setAttribute('title', '라이트 모드로 전환');
-          themeToggleBtn.setAttribute('aria-label', '라이트 모드로 전환');
-        } else {
-          themeIcon.className = 'fa-solid fa-moon'; // FontAwesome 아이콘 클래스 변경
-          themeToggleBtn.setAttribute('title', '다크 모드로 전환');
-          themeToggleBtn.setAttribute('aria-label', '다크 모드로 전환');
-        }
+  function renderTheme() {
+    document.documentElement.setAttribute('data-theme', state.theme);
+    if (themeIcon) {
+      if (state.theme === 'dark') {
+        themeIcon.className = 'fa-solid fa-sun';
+        themeToggleBtn.setAttribute('title', '라이트 모드로 전환');
+        themeToggleBtn.setAttribute('aria-label', '라이트 모드로 전환');
+      } else {
+        themeIcon.className = 'fa-solid fa-moon';
+        themeToggleBtn.setAttribute('title', '다크 모드로 전환');
+        themeToggleBtn.setAttribute('aria-label', '다크 모드로 전환');
       }
     }
+  }
 
-    if (themeToggleBtn) {
-      themeToggleBtn.addEventListener('click', toggleTheme);
-    }
+  if (themeToggleBtn) {
+    themeToggleBtn.addEventListener('click', toggleTheme);
   }
 
   // ==========================================================================
@@ -101,13 +101,13 @@ document.addEventListener('DOMContentLoaded', () => {
     hamburgerBtn.addEventListener('click', toggleMobileMenu);
   }
 
-  navLinks.forEach(link => {
+  navLinks.forEach((link) => {
     link.addEventListener('click', () => {
-      closeMobileMenu()
+      closeMobileMenu();
     });
   });
 
-  // 외부 영역 클릭 시 닫기
+  // 메뉴 외부 영역 클릭 시 닫기
   document.addEventListener('click', (e) => {
     if (
       navMenu &&
@@ -140,7 +140,7 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     }
 
-    // 맨 위로가기 버튼 노출 (기본 300px 이상)
+    // 맨 위로 가기 버튼 노출 (기본 300px 이상)
     if (scrollTopBtn) {
       if (currentScrollY >= (CONFIG.SCROLL?.TOP_BTN_THRESHOLD || 300)) {
         scrollTopBtn.classList.add('visible');
@@ -150,7 +150,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // 현재 스크롤 위치에 따른 네비게이션 링크 활성화
-    sections.forEach(section => {
+    sections.forEach((section) => {
       const sectionHeight = section.offsetHeight;
       const sectionTop = section.offsetTop - 120;
       const sectionId = section.getAttribute('id');
@@ -171,13 +171,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
   if (scrollTopBtn) {
     scrollTopBtn.addEventListener('click', () => {
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+      });
     });
   }
 
   // ==========================================================================
   // 4. Scroll Animations (Intersection Observer)
-  // 대상: fade-in-element 요소
+  // 대상: .fade-in-element 요소
   // DOM 렌더링: viewport 진입 시 .visible 클래스 추가
   // ==========================================================================
   function initScrollAnimations() {
@@ -191,10 +194,10 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     const observer = new IntersectionObserver((entries, obs) => {
-      entries.forEach(entry => {
+      entries.forEach((entry) => {
         if (entry.isIntersecting) {
           entry.target.classList.add('visible');
-          obs.unobserve(entry.target); // 한번 노출 된 후 옵저버 해제
+          obs.unobserve(entry.target); // 한 번 노출된 후 옵저버 해제
         }
       });
     }, observerOptions);
@@ -259,12 +262,38 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function filterProjects(language) {
-
+    state.selectedFilter = language;
+    if (language === 'all') {
+      state.filteredRepos = state.repos;
+    } else {
+      state.filteredRepos = state.repos.filter((repo) => repo.language === language);
+    }
+    renderProjectsFilterButtons();
+    renderProjectsUI();
   }
 
   // 필터 버튼 렌더링 (array.filter 활용)
   function renderProjectsFilterButtons() {
+    if (!projectsFilter || state.repos.length === 0) return;
 
+    // 존재하는 언어 목록 추출 (중복 제거)
+    const languages = ['all', ...new Set(state.repos.map((repo) => repo.language).filter(Boolean))];
+
+    projectsFilter.innerHTML = languages
+      .map((lang) => {
+        const isActive = state.selectedFilter === lang ? 'active' : '';
+        const label = lang === 'all' ? '전체' : lang;
+        return `<button> class="filter-btn ${isActive}" data-filter="${lang}" role="tab" aria-selected="${state.selectedFilter === lang}">${label}</button>`;
+      })
+      .join('');
+
+    // 필터 버튼 클릭 이벤트 위임
+    projectsFilter.querySelectorAll('.filter-btn').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const selected = btn.getAttribute('data-filter');
+        filterProjects(selected);
+      });
+    });
   }
 
   // 프로젝트 UI 상태별 렌더링 (로딩 / 성공 / 에러 / 빈 상태)
@@ -273,7 +302,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // 1. 로딩 상태
     if (state.apiStatus === 'loading') {
-    projectsContainer.innerHTML = `
+      projectsContainer.innerHTML = `
         <div class="state-container">
           <div class="spinner" aria-hidden="true"></div>
           <h3 class="state-title">GitHub 저장소 로딩 중...</h3>
@@ -317,7 +346,52 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // 4. 성공 상태: ES6 map 및 템플릿 리터럴로 카드 그리드 생성
     if (state.apiStatus === 'success') {
-      
+      const cardsHtml = state.filteredRepos
+        .map((repo) => {
+          const { name, description, html_url, homepage, stargazers_count, language, updated_at } = repo;
+          const displayDesc = description ? description : '설명이 등록되지 않은 저장소 입니다.';
+          const displayLang = language ? language : 'Markdown / Etc';
+          const updateDate = new Date(updated_at).toLocaleDateString('ko-KR', {
+            year: 'numeric',
+            month: 'short',
+            day: 'numeric'
+          });
+
+          return `
+            <article class="project-card">
+              <div>
+                <div class="project-card-header">
+                  <div class="folder-icon">
+                    <i class="fa-regular fa-folder"></i>
+                  </div>
+                  <div class="project-links">
+                    <a href="${html_url}" target="_blank" rel="noopener noreferrer" class="project-ext-link" title="GitHub 저장소 보기" aria-label="${escapeHtml(name)} GitHub 저장소">
+                      <i class="fa-brands fa-github"></i>
+                    </a>
+                    ${homepage ? `
+                      <a href="${homepage}" target="_blank" rel="noopener noreferrer" class="project-ext-link" title="라이브 데모 보기" aria-label="${escapeHtml(name)} 라이브 웹사이트">
+                        <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                      </a>
+                    ` : ''}
+                  </div>
+                </div>
+                <h3 class="project-title">${escapeHtml(name)}</h3>
+                <p class="project-desc">${escapeHtml(displayDesc)}</p>
+              </div>
+              <div class="project-meta">
+                <span class="repo-language">
+                  <span class="lang-circle"></span> ${escapeHtml(displayLang)}
+                </span>
+                <span class="repo-stars" title="Stars">
+                  <i class="fa-regular fa-star"></i> ${stargazers_count}
+                </span>
+              </div>
+            </article>
+          `;
+        })
+        .join('');
+
+      projectsContainer.innerHTML = `<div class="projects-grid">${cardsHtml}</div>`;
     }
   }
 
@@ -441,7 +515,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // ==========================================================================
   const typingElement = document.getElementById('typing-text');
   const typingWords = CONFIG.PROFILE?.typingTexts || [
-    'Front-End Developer.',
+    'Frontend Developer.',
     'Creative Problem Solver.',
     'Continuous Learner.'
   ];
@@ -456,15 +530,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const currentWord = typingWords[wordIndex];
 
-      if (isDeleting) {
-        typingElement.textContent = currentWord.substring(0, charIndex - 1);
-        charIndex--;
-        typingSpeed = 50;
-      } else {
-        typingElement.textContent = currentWord.substring(0, charIndex + 1);
-        charIndex++;
-        typingSpeed = 110;
-      }
+    if (isDeleting) {
+      typingElement.textContent = currentWord.substring(0, charIndex - 1);
+      charIndex--;
+      typingSpeed = 50;
+    } else {
+      typingElement.textContent = currentWord.substring(0, charIndex + 1);
+      charIndex++;
+      typingSpeed = 110;
+    }
 
     if (!isDeleting && charIndex === currentWord.length) {
       // 한 단어 완성 시 일시 대기
@@ -489,7 +563,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // Initialization
   // ==========================================================================
   initTheme();
-  initScrollAnimations()
+  initScrollAnimations();
   typeEffect();
-  fetchGitHubRepos()
+  fetchGitHubRepos();
 });
