@@ -16,7 +16,7 @@
 
 | 데스크톱 라이트 모드 (Desktop Light) | 데스크톱 다크 모드 (Desktop Dark) |
 | :---: | :---: |
-| ![Desktop Light Mode](images/profile.png) | ![Desktop Dark Mode](images/profile.png) |
+| ![Desktop Light Mode](images/light.png) | ![Desktop Dark Mode](images/dark.png) |
 
 | 모바일 반응형 뷰 (Mobile Responsive) | 햄버거 메뉴 & GitHub API 카드 |
 | :---: | :---: |
